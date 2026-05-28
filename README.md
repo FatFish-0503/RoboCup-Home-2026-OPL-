@@ -18,7 +18,9 @@ This repository contains the code, documentation, and resources for the RoboCup@
 
 ## Team
 FAMBOT
-Team Members: 1. LAI HOU LONG 2. U MAN HIN 3. U HOU IAN 4. CHE CHEOK HIN 5. WU YAI LON
+Team Members: 
+
+1. LAI HOU LONG 2. U MAN HIN 3. U HOU IAN 4. CHE CHEOK HIN 5. WU YAI LON
 ---
 
 Last Updated: 2026-05-28
