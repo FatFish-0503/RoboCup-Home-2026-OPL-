@@ -17,7 +17,7 @@ This repository contains the code, documentation, and resources for the RoboCup@
 - Check out the issues and discussions for ongoing work
 
 ## Team
-For more information about the team and competition, visit the official RoboCup website.
+FAMBOT
 
 ---
 
