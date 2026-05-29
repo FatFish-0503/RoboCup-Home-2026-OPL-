@@ -6,3 +6,4 @@ This log tracks the chronological execution timeline, software modifications, an
 | :--- | :--- | :--- | :--- | :--- |
 | **2026-05-28**<br>19:00 | Repository Setup | Initialized git and successfully opened the GitHub repository site. | Success | Remote tracking branches configured. |
 | **2026-05-28**<br>20:35 | Audio & Sensors | Added a specialized background function to handle **doorbell sound detection**. | Success | Integrated **`librosa`** for acoustic feature processing and **`sounddevice`** for real-time stream listening. |
+| **2026-05-29**<br>10:55 | Vision Processing | Added a frame-cropping capability during navigation state adjustments. | Success | Automatically **crops the middle frame** immediately when the robot turns to face the center/middle position. This ensures cleaner visual tracking input. |
