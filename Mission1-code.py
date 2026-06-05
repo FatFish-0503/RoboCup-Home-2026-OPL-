@@ -184,30 +184,41 @@ def encode_audio(audio_path):
     with open(audio_path, "rb") as f:
         return base64.b64encode(f.read()).decode("utf-8")
 
+BELL_THRESHOLD = 62000
+_last_checked_audio_path = None
+
 def detect_bell_from_file(audio_path):
     try:
         target_path = "/home/robot/doorbell/dragon-studio-doorbell-ding-dong-482879.wav"
-
         SAMPLE_RATE = 44100
-        THRESHOLD = 145000
 
-        target_y, target_sr = librosa.load(target_path, sr=SAMPLE_RATE)
-        audio_y, audio_sr = librosa.load(audio_path, sr=SAMPLE_RATE)
+        target_y, _ = librosa.load(target_path, sr=SAMPLE_RATE)
+        audio_y, _ = librosa.load(audio_path, sr=SAMPLE_RATE)
 
         target_mfcc = librosa.feature.mfcc(y=target_y, sr=SAMPLE_RATE, n_mfcc=40).T
         audio_mfcc = librosa.feature.mfcc(y=audio_y, sr=SAMPLE_RATE, n_mfcc=40).T
 
         n = min(len(target_mfcc), len(audio_mfcc))
+        if n <= 0:
+            return False
+
         target_mfcc = target_mfcc[-n:]
         audio_mfcc = audio_mfcc[-n:]
 
-        distance = np.sum(((audio_mfcc[:, 1:] - target_mfcc[:, 1:]) ** 2) ** 0.5)
+        distance = np.sum(np.abs(audio_mfcc[:, 1:] - target_mfcc[:, 1:]))
+
+        rms = float(np.sqrt(np.mean(audio_y ** 2)))
+        peak = float(np.max(np.abs(audio_y)))
+        duration = len(audio_y) / SAMPLE_RATE
 
         print("[BELL] distance =", distance)
+        print("[BELL] rms =", rms, "peak =", peak, "duration =", duration)
 
-        if distance < THRESHOLD:
+        if distance < BELL_THRESHOLD:
+            print("[BELL] detected")
             return True
         else:
+            print("[BELL] not bell")
             return False
 
     except Exception as e:
@@ -1654,7 +1665,15 @@ if __name__ == "__main__":
         if state == 0:
             print("state 0: wait for bell")
 
-            if _audio_path is not None and os.path.exists(_audio_path):
+            if _new_audio_flag and _audio_path is not None and os.path.exists(_audio_path):
+
+                if _audio_path == _last_checked_audio_path:
+                    _new_audio_flag = False
+                    continue
+
+                _last_checked_audio_path = _audio_path
+                _new_audio_flag = False
+
                 if detect_bell_from_file(_audio_path):
                     say("I heard the doorbell")
                     state = 1
@@ -2204,6 +2223,3 @@ if __name__ == "__main__":
             follow()
 
             state = 22
-
-
-Last Updated: 29/5/2026
